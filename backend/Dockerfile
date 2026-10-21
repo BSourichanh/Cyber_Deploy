@@ -12,7 +12,15 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+# Créer le groupe et l'utilisateur non-root deployeur
+RUN groupadd -r deployeur && useradd -r -g deployeur -d /app -s /sbin/nologin deployeur \
+    && chown -R deployeur:deployeur /app
+
+# Copier le JAR avec la propriété deployeur
+COPY --from=build --chown=deployeur:deployeur /app/target/*.jar app.jar
+
+# Basculer sous l'utilisateur deployeur
+USER deployeur
 
 EXPOSE 8080
 

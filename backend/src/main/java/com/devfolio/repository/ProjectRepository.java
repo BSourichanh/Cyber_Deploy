@@ -8,4 +8,5 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findByOwnerId(Long ownerId);
     List<Project> findByIsPublicTrue();
+    List<Project> findByOwnerIdAndIsPublicTrue(Long ownerId);
 }

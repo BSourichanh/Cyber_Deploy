@@ -32,7 +32,12 @@ onMounted(async () => {
 
     <div class="card">
       <div class="card-body">
-        <h2>{{ project.title }}</h2>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="mb-0">{{ project.title }}</h2>
+          <span v-if="project.isPublic !== undefined" :class="project.isPublic ? 'badge bg-success' : 'badge bg-secondary'">
+            {{ project.isPublic ? 'Public' : 'Privé' }}
+          </span>
+        </div>
         <p class="text-muted">Propriétaire : #{{ project.ownerId }}</p>
         <p>{{ project.description }}</p>
         <a v-if="project.githubUrl && project.githubUrl.startsWith('https://')" :href="project.githubUrl"

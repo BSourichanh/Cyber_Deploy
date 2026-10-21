@@ -42,6 +42,15 @@ public class ProjectController {
         return ResponseEntity.ok(projectRepository.findByIsPublicTrue());
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Project>> getProjectsByUser(@PathVariable Long userId) {
+        User currentUser = getCurrentUser();
+        if (currentUser != null && (userId.equals(currentUser.getId()) || "ADMIN".equalsIgnoreCase(currentUser.getRole()))) {
+            return ResponseEntity.ok(projectRepository.findByOwnerId(userId));
+        }
+        return ResponseEntity.ok(projectRepository.findByOwnerIdAndIsPublicTrue(userId));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProject(@PathVariable Long id) {
         return projectRepository.findById(id).map(project -> {
