@@ -7,7 +7,21 @@ const router = createRouter({
     { path: '/', component: () => import('@/views/HomeView.vue') },
     { path: '/login', component: () => import('@/views/LoginView.vue') },
     { path: '/register', component: () => import('@/views/RegisterView.vue') },
-    { path: '/profile/:id', component: () => import('@/views/ProfileView.vue') },
+    {
+      path: '/profile/:id',
+      component: () => import('@/views/ProfileView.vue'),
+      beforeEnter: async (to, from, next) => {
+        const auth = useAuthStore()
+        const user = await auth.checkAuth()
+        if (!user) {
+          next('/login')
+        } else if (user.id == to.params.id || user.role === 'ADMIN') {
+          next()
+        } else {
+          next('/')
+        }
+      }
+    },
     { path: '/project/:id', component: () => import('@/views/ProjectView.vue') },
 
     {
